@@ -6,7 +6,7 @@ Logback logger appender for sending log messages to Stackify.
 
 Logging Overview:
 
-https://stackify.screenstepslive.com/s/3095/m/7787/l/226390-log-aggregation-beta
+http://docs.stackify.com/s/3095/m/7787/l/226390-log-aggregation-beta
 
 Sign Up for a Trial:
 
