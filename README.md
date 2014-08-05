@@ -2,7 +2,11 @@
 
 [![Build Status](https://travis-ci.org/stackify/stackify-log-logback.png)](https://travis-ci.org/stackify/stackify-log-logback)
 
-Logback logger appender for sending log messages to Stackify.
+Logback logger appender for sending log messages and exceptions to Stackify.
+
+Error Logging and Monitoring Overview:
+
+http://docs.stackify.com/s/3095/m/7787/l/189767-error-logging-and-monitoring-overview
 
 Logging Overview:
 
@@ -29,6 +33,23 @@ LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
 loggerContext.stop();
 ```
 
+## Usage (Exceptions only)
+
+Example appender configuration:
+```xml
+<appender name="STACKIFY_ERROR" class="com.stackify.log.logback.StackifyErrorAppender">
+    <apiKey>YOUR_API_KEY</apiKey>
+    <application>YOUR_APPLICATION_NAME</application>
+    <environment>YOUR_ENVIRONMENT</environment>
+</appender>
+```
+
+Be sure to shutdown Logback to flush this appender of any errors and shutdown the background thread:
+```java
+LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+loggerContext.stop();
+```
+
 ## Installation
 
 Add it as a maven dependency:
@@ -36,7 +57,7 @@ Add it as a maven dependency:
 <dependency>
     <groupId>com.stackify</groupId>
     <artifactId>stackify-log-logback</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 </dependency>
 ```
 
