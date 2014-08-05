@@ -1,6 +1,7 @@
 # stackify-log-logback
 
 [![Build Status](https://travis-ci.org/stackify/stackify-log-logback.png)](https://travis-ci.org/stackify/stackify-log-logback)
+[![Coverage Status](https://coveralls.io/repos/stackify/stackify-log-logback/badge.png?branch=master)](https://coveralls.io/r/stackify/stackify-log-logback?branch=master)
 
 Logback logger appender for sending log messages and exceptions to Stackify.
 
