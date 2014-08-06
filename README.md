@@ -34,23 +34,6 @@ LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
 loggerContext.stop();
 ```
 
-## Usage (Exceptions only)
-
-Example appender configuration:
-```xml
-<appender name="STACKIFY_ERROR" class="com.stackify.log.logback.StackifyErrorAppender">
-    <apiKey>YOUR_API_KEY</apiKey>
-    <application>YOUR_APPLICATION_NAME</application>
-    <environment>YOUR_ENVIRONMENT</environment>
-</appender>
-```
-
-Be sure to shutdown Logback to flush this appender of any errors and shutdown the background thread:
-```java
-LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
-loggerContext.stop();
-```
-
 ## Installation
 
 Add it as a maven dependency:
