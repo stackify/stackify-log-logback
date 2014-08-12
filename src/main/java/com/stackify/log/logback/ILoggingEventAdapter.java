@@ -16,6 +16,8 @@
 package com.stackify.log.logback;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
@@ -24,11 +26,14 @@ import ch.qos.logback.classic.spi.ThrowableProxy;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Maps;
 import com.stackify.api.EnvironmentDetail;
 import com.stackify.api.LogMsg;
 import com.stackify.api.StackifyError;
+import com.stackify.api.WebRequestDetail;
 import com.stackify.api.common.lang.Throwables;
 import com.stackify.api.common.log.EventAdapter;
+import com.stackify.api.common.log.ServletLogContext;
 
 /**
  * ILoggingEventAdapter
@@ -79,6 +84,20 @@ public class ILoggingEventAdapter implements EventAdapter<ILoggingEvent> {
 		builder.occurredEpochMillis(new Date(event.getTimeStamp()));
 		builder.error(Throwables.toErrorItem(event.getFormattedMessage(), exception));
 				
+		Optional<String> user = ServletLogContext.getUser();
+		
+		if (user.isPresent()) {
+			builder.userName(user.get());
+		}
+
+		Optional<WebRequestDetail> webRequest = ServletLogContext.getWebRequest();
+		
+		if (webRequest.isPresent()) {
+			builder.webRequestDetail(webRequest.get());
+		}
+		
+		builder.serverVariables(Maps.fromProperties(System.getProperties()));
+
 		return builder.build();
 	}
 
@@ -104,6 +123,12 @@ public class ILoggingEventAdapter implements EventAdapter<ILoggingEvent> {
 		builder.th(event.getThreadName());
 		builder.epochMs(event.getTimeStamp());
 		builder.level(event.getLevel().toString().toLowerCase());
+
+		Optional<String> transactionId = ServletLogContext.getTransactionId();
+		
+		if (transactionId.isPresent()) {
+			builder.transId(transactionId.get());
+		}
 
 		StackTraceElement[] callerData = event.getCallerData();
 		
