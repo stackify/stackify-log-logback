@@ -28,6 +28,8 @@ Example appender configuration:
 </appender>
 ```
 
+Note: *If you are logging from a device that has the stackify-agent installed, the environment setting is optional. We will use the environment associated to your device in Stackify.*
+
 Be sure to shutdown Logback to flush this appender of any errors and shutdown the background thread:
 ```java
 LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
