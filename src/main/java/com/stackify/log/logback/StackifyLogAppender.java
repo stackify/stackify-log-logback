@@ -138,7 +138,7 @@ public class StackifyLogAppender extends AppenderBase<ILoggingEvent> {
 		
 		// build the api config
 		
-		ApiConfiguration apiConfig = ApiConfigurations.from(apiUrl, apiKey, application, environment);
+		ApiConfiguration apiConfig = ApiConfigurations.fromPropertiesWithOverrides(apiUrl, apiKey, application, environment);
 
 		// build the log appender
 		
