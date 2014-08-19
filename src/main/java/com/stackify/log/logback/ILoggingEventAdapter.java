@@ -16,14 +16,13 @@
 package com.stackify.log.logback;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.IThrowableProxy;
 import ch.qos.logback.classic.spi.ThrowableProxy;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
@@ -46,6 +45,11 @@ public class ILoggingEventAdapter implements EventAdapter<ILoggingEvent> {
 	 */
 	private final EnvironmentDetail envDetail;
 	
+	/**
+	 * JSON converter
+	 */
+	private final ObjectMapper json = new ObjectMapper();
+
 	/**
 	 * Constructor
 	 * @param envDetail Environment detail
@@ -115,7 +119,11 @@ public class ILoggingEventAdapter implements EventAdapter<ILoggingEvent> {
 		
 		if (props != null) {
 			if (!props.isEmpty()) {
-				builder.data(props.toString());
+				try {
+					builder.data(json.writeValueAsString(props.toString()));
+				} catch (Exception e) {
+					// do nothing
+				}
 			}
 		}
 				
