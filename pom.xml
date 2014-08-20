@@ -3,7 +3,7 @@
 
 	<groupId>com.stackify</groupId>
 	<artifactId>stackify-log-logback</artifactId>
-	<version>1.0.4-SNAPSHOT</version>
+	<version>1.0.4</version>
 	
 	<name>Stackify Log Appender for Logback</name>
 	<description>Stackify Log Appender for Logback</description>
@@ -50,13 +50,13 @@
 		<dependency>
 		  	<groupId>com.stackify</groupId>
   			<artifactId>stackify-api</artifactId>
-  			<version>1.0.5-SNAPSHOT</version>
+  			<version>1.0.5</version>
 		</dependency>
 				
 		<dependency>
 		  	<groupId>com.stackify</groupId>
   			<artifactId>stackify-api-common</artifactId>
-  			<version>1.0.8-SNAPSHOT</version>
+  			<version>1.0.8</version>
 		</dependency>
 				
 		<dependency>
