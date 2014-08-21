@@ -120,7 +120,7 @@ public class ILoggingEventAdapter implements EventAdapter<ILoggingEvent> {
 		if (props != null) {
 			if (!props.isEmpty()) {
 				try {
-					builder.data(json.writeValueAsString(props.toString()));
+					builder.data(json.writeValueAsString(props));
 				} catch (Exception e) {
 					// do nothing
 				}
