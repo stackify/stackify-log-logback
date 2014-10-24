@@ -115,4 +115,73 @@ public class StackifyLogAppenderTest {
 		
 		Mockito.verify(logAppender).close();
 	}
+	
+	/**
+	 * testStartException
+	 * @throws Exception 
+	 */
+	@Test
+	public void testStartException() throws Exception {
+		StackifyLogAppender appender = new StackifyLogAppender();
+		appender.setApiKey("key");
+		appender.setApplication("application");
+		appender.setEnvironment("environment");
+		
+		StackifyLogAppender appenderSpy = PowerMockito.spy(appender);
+		
+		LogAppender<ILoggingEvent> logAppender = Mockito.mock(LogAppender.class);
+		Mockito.doThrow(new RuntimeException()).when(logAppender).activate(Mockito.any(ApiConfiguration.class));
+		
+		PowerMockito.whenNew(LogAppender.class).withAnyArguments().thenReturn(logAppender);
+
+		appenderSpy.start();
+		
+		Mockito.verify(appenderSpy).addError(Mockito.anyString(), Mockito.any(Exception.class));
+	}
+	
+	/**
+	 * testAppendException
+	 * @throws Exception 
+	 */
+	@Test
+	public void testAppendException() throws Exception {
+		StackifyLogAppender appender = new StackifyLogAppender();
+		appender.setApiKey("key");
+		appender.setApplication("application");
+		appender.setEnvironment("environment");
+		
+		StackifyLogAppender appenderSpy = PowerMockito.spy(appender);
+		
+		LogAppender<ILoggingEvent> logAppender = Mockito.mock(LogAppender.class);
+		Mockito.doThrow(new RuntimeException()).when(logAppender).append(Mockito.any(ILoggingEvent.class));
+		
+		PowerMockito.whenNew(LogAppender.class).withAnyArguments().thenReturn(logAppender);
+
+		appenderSpy.append(Mockito.mock(ILoggingEvent.class));
+		
+		Mockito.verify(appenderSpy).addError(Mockito.anyString(), Mockito.any(Exception.class));
+	}
+	
+	/**
+	 * testStopException
+	 * @throws Exception 
+	 */
+	@Test
+	public void testStopException() throws Exception {
+		StackifyLogAppender appender = new StackifyLogAppender();
+		appender.setApiKey("key");
+		appender.setApplication("application");
+		appender.setEnvironment("environment");
+		
+		StackifyLogAppender appenderSpy = PowerMockito.spy(appender);
+		
+		LogAppender<ILoggingEvent> logAppender = Mockito.mock(LogAppender.class);
+		Mockito.doThrow(new RuntimeException()).when(logAppender).close();
+		
+		PowerMockito.whenNew(LogAppender.class).withAnyArguments().thenReturn(logAppender);
+
+		appenderSpy.stop();
+		
+		Mockito.verify(appenderSpy).addError(Mockito.anyString(), Mockito.any(Exception.class));
+	}
 }

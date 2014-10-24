@@ -146,7 +146,7 @@ public class StackifyLogAppender extends AppenderBase<ILoggingEvent> {
 			this.logAppender = new LogAppender<ILoggingEvent>("stackify-log-logback", new ILoggingEventAdapter(apiConfig.getEnvDetail()));
 			this.logAppender.activate(apiConfig);
 		} catch (Exception e) {
-			addError("Exception starting the Stackify_LogBackgroundService");
+			addError("Exception starting the Stackify_LogBackgroundService", e);
 		}
 	}
 
