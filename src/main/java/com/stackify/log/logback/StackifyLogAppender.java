@@ -18,6 +18,7 @@ package com.stackify.log.logback;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.AppenderBase;
 
+import com.stackify.api.common.ApiClients;
 import com.stackify.api.common.ApiConfiguration;
 import com.stackify.api.common.ApiConfigurations;
 import com.stackify.api.common.log.LogAppender;
@@ -140,10 +141,14 @@ public class StackifyLogAppender extends AppenderBase<ILoggingEvent> {
 		
 		ApiConfiguration apiConfig = ApiConfigurations.fromPropertiesWithOverrides(apiUrl, apiKey, application, environment);
 
+		// get the client project name with version
+
+		String clientName = ApiClients.getApiClient("/stackify-log-logback.properties", "stackify-log-logback");
+
 		// build the log appender
 		
 		try {
-			this.logAppender = new LogAppender<ILoggingEvent>("stackify-log-logback", new ILoggingEventAdapter(apiConfig.getEnvDetail()));
+			this.logAppender = new LogAppender<ILoggingEvent>(clientName, new ILoggingEventAdapter(apiConfig.getEnvDetail()));
 			this.logAppender.activate(apiConfig);
 		} catch (Exception e) {
 			addError("Exception starting the Stackify_LogBackgroundService", e);
