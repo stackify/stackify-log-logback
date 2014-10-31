@@ -143,7 +143,7 @@ public class StackifyLogAppender extends AppenderBase<ILoggingEvent> {
 
 		// get the client project name with version
 
-		String clientName = ApiClients.getApiClient("/stackify-log-logback.properties", "stackify-log-logback");
+		String clientName = ApiClients.getApiClient(StackifyLogAppender.class, "/stackify-log-logback.properties", "stackify-log-logback");
 
 		// build the log appender
 		
