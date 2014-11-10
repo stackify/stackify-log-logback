@@ -18,6 +18,7 @@ package com.stackify.log.logback;
 import java.util.Date;
 import java.util.Map;
 
+import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.IThrowableProxy;
 import ch.qos.logback.classic.spi.ThrowableProxy;
@@ -86,8 +87,29 @@ public class ILoggingEventAdapter implements EventAdapter<ILoggingEvent> {
 		StackifyError.Builder builder = StackifyError.newBuilder();
 		builder.environmentDetail(envDetail);		
 		builder.occurredEpochMillis(new Date(event.getTimeStamp()));
-		builder.error(Throwables.toErrorItem(event.getFormattedMessage(), exception));
+		
+		if (exception != null) {
+			builder.error(Throwables.toErrorItem(event.getFormattedMessage(), exception));
+		} else {
+			String className = null;
+			String methodName = null;
+			int lineNumber = 0;
+			
+			StackTraceElement[] callerData = event.getCallerData();
+			
+			if (callerData != null) {
+				StackTraceElement locInfo = callerData[0];
 				
+				if (locInfo != null) {	
+					className = locInfo.getClassName();
+					methodName = locInfo.getMethodName();
+					lineNumber = locInfo.getLineNumber();
+				}
+			}
+						
+			builder.error(Throwables.toErrorItem(event.getFormattedMessage(), className, methodName, lineNumber));
+		}
+		
 		Optional<String> user = ServletLogContext.getUser();
 		
 		if (user.isPresent()) {
@@ -144,7 +166,7 @@ public class ILoggingEventAdapter implements EventAdapter<ILoggingEvent> {
 			StackTraceElement locInfo = callerData[0];
 			
 			if (locInfo != null) {			
-				builder.srcMethod(locInfo.getMethodName());
+				builder.srcMethod(locInfo.getClassName() + "." + locInfo.getMethodName());
 				
 				try {
 					builder.srcLine(locInfo.getLineNumber());
@@ -154,5 +176,13 @@ public class ILoggingEventAdapter implements EventAdapter<ILoggingEvent> {
 		}
 		
 		return builder.build();
+	}
+
+	/**
+	 * @see com.stackify.api.common.log.EventAdapter#isErrorLevel(java.lang.Object)
+	 */
+	@Override
+	public boolean isErrorLevel(final ILoggingEvent event) {
+		return (event.getLevel() == Level.ERROR);
 	}
 }

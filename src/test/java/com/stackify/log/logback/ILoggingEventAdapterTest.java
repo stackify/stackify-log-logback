@@ -79,13 +79,14 @@ public class ILoggingEventAdapterTest {
 		StackifyError ex = Mockito.mock(StackifyError.class);
 		String th = "th";
 		String level = "debug";
+		String srcClass = "srcClass";
 		String srcMethod = "srcMethod";
 		Integer srcLine = Integer.valueOf(14);
 		
 		Map<String, String> properties = Maps.newHashMap();
 		properties.put("key", "value");
 
-		StackTraceElement ste = new StackTraceElement("", srcMethod, "", srcLine);
+		StackTraceElement ste = new StackTraceElement(srcClass, srcMethod, "", srcLine);
 		
 		ILoggingEvent event = Mockito.mock(ILoggingEvent.class);
 		Mockito.when(event.getFormattedMessage()).thenReturn(msg);
@@ -103,7 +104,7 @@ public class ILoggingEventAdapterTest {
 		Assert.assertEquals(ex, logMsg.getEx());		
 		Assert.assertEquals(th, logMsg.getTh());		
 		Assert.assertEquals(level, logMsg.getLevel());			
-		Assert.assertEquals(srcMethod, logMsg.getSrcMethod());		
+		Assert.assertEquals(srcClass + "." + srcMethod, logMsg.getSrcMethod());		
 		Assert.assertEquals(srcLine, logMsg.getSrcLine());		
 	}
 	
@@ -164,5 +165,41 @@ public class ILoggingEventAdapterTest {
 		
 		Assert.assertNotNull(logMsg);
 		Assert.assertEquals(transactionId, logMsg.getTransId());
+	}
+	
+	/**
+	 * testIsErrorLevel
+	 */
+	@Test
+	public void testIsErrorLevel() {
+		ILoggingEvent debug = Mockito.mock(ILoggingEvent.class);
+		Mockito.when(debug.getLevel()).thenReturn(Level.DEBUG);
+
+		ILoggingEvent error = Mockito.mock(ILoggingEvent.class);
+		Mockito.when(error.getLevel()).thenReturn(Level.ERROR);
+		
+		ILoggingEventAdapter adapter = new ILoggingEventAdapter(Mockito.mock(EnvironmentDetail.class));
+
+		Assert.assertFalse(adapter.isErrorLevel(debug));
+		Assert.assertTrue(adapter.isErrorLevel(error));
+	}
+	
+	/**
+	 * testGetStackifyErrorWithoutException
+	 */
+	@Test
+	public void testGetStackifyErrorWithoutException() {
+		StackTraceElement ste = new StackTraceElement("class", "method", "file", 123);
+		
+		ILoggingEvent event = Mockito.mock(ILoggingEvent.class);
+		Mockito.when(event.getLevel()).thenReturn(Level.ERROR);
+		Mockito.when(event.getFormattedMessage()).thenReturn("Exception message");
+		Mockito.when(event.getCallerData()).thenReturn(new StackTraceElement[]{ste});
+		
+		ILoggingEventAdapter adapter = new ILoggingEventAdapter(Mockito.mock(EnvironmentDetail.class));
+		StackifyError error = adapter.getStackifyError(event, null);
+		
+		Assert.assertNotNull(error);
+		Assert.assertEquals("StringException", error.getError().getErrorType());
 	}
 }
