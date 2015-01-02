@@ -46,23 +46,48 @@
 	<dependencies>
 	
 		<!-- Compile time dependencies -->
-						
+		
 		<dependency>
-		  	<groupId>com.stackify</groupId>
-  			<artifactId>stackify-api-java</artifactId>
-  			<version>2.0.0</version>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>14.0.1</version>
+		</dependency>
+			
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.1.3</version>
 		</dependency>
 				
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-core</artifactId>
+			<version>1.0.13</version>
+		</dependency>
+						
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 			<version>1.0.13</version>
 		</dependency>
-				
+						
+		<dependency>
+		  	<groupId>com.stackify</groupId>
+  			<artifactId>stackify-api-java</artifactId>
+  			<version>2.0.2-SNAPSHOT</version>
+		</dependency>
+								
 		<!-- Runtime dependencies -->
 
 		<!-- Test dependencies -->
 		
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.5</version>
+			<scope>test</scope>
+		</dependency>
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -72,31 +97,31 @@
 		
 		<dependency>
 			<groupId>org.mockito</groupId>
-			<artifactId>mockito-all</artifactId>
+			<artifactId>mockito-core</artifactId>
 			<version>1.9.5</version>
 			<scope>test</scope>
 		</dependency>
 		
 		<dependency>
-			<groupId>org.powermock</groupId>
-			<artifactId>powermock-api-mockito</artifactId>
-			<version>1.5</version>
-			<scope>test</scope>
-		</dependency>
+		    <groupId>org.powermock</groupId>
+    		<artifactId>powermock-core</artifactId>
+      		<version>1.5.6</version>
+      		<scope>test</scope>
+   		</dependency>
 		
 		<dependency>
-			<groupId>org.powermock</groupId>
-			<artifactId>powermock-module-junit4</artifactId>
-			<version>1.5</version>
-			<scope>test</scope>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.7.5</version>
-			<scope>test</scope>
-		</dependency>
+      		<groupId>org.powermock</groupId>
+      		<artifactId>powermock-module-junit4</artifactId>
+      		<version>1.5.6</version>
+      		<scope>test</scope>
+   		</dependency>
+   		
+   		<dependency>
+      		<groupId>org.powermock</groupId>
+      		<artifactId>powermock-api-mockito</artifactId>
+      		<version>1.5.6</version>
+      		<scope>test</scope>
+   		</dependency>
 		
 	</dependencies>
 	
