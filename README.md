@@ -39,7 +39,7 @@ Add it as a maven dependency:
 <dependency>
     <groupId>com.stackify</groupId>
     <artifactId>stackify-log-logback</artifactId>
-    <version>1.0.14</version>
+    <version>1.0.15</version>
 </dependency>
 ```
 
