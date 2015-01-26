@@ -24,9 +24,6 @@ import ch.qos.logback.classic.spi.IThrowableProxy;
 import ch.qos.logback.classic.spi.ThrowableProxy;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Maps;
 import com.stackify.api.EnvironmentDetail;
 import com.stackify.api.LogMsg;
 import com.stackify.api.StackifyError;
@@ -34,6 +31,8 @@ import com.stackify.api.WebRequestDetail;
 import com.stackify.api.common.lang.Throwables;
 import com.stackify.api.common.log.EventAdapter;
 import com.stackify.api.common.log.ServletLogContext;
+import com.stackify.api.common.util.Maps;
+import com.stackify.api.common.util.Preconditions;
 
 /**
  * ILoggingEventAdapter
@@ -64,18 +63,18 @@ public class ILoggingEventAdapter implements EventAdapter<ILoggingEvent> {
 	 * @see com.stackify.api.common.log.EventAdapter#getThrowable(java.lang.Object)
 	 */
 	@Override
-	public Optional<Throwable> getThrowable(final ILoggingEvent event) {
+	public Throwable getThrowable(final ILoggingEvent event) {
 		
 		IThrowableProxy iThrowableProxy = event.getThrowableProxy();
 		
 		if (iThrowableProxy != null) {
 			if (iThrowableProxy instanceof ThrowableProxy) {
 				ThrowableProxy throwableProxy = (ThrowableProxy) iThrowableProxy;
-				return Optional.fromNullable(throwableProxy.getThrowable());
+				return throwableProxy.getThrowable();
 			}
 		}
 		
-		return Optional.absent();
+		return null;
 	}
 
 	/**
@@ -110,16 +109,16 @@ public class ILoggingEventAdapter implements EventAdapter<ILoggingEvent> {
 			builder.error(Throwables.toErrorItem(event.getFormattedMessage(), className, methodName, lineNumber));
 		}
 		
-		Optional<String> user = ServletLogContext.getUser();
+		String user = ServletLogContext.getUser();
 		
-		if (user.isPresent()) {
-			builder.userName(user.get());
+		if (user != null) {
+			builder.userName(user);
 		}
 
-		Optional<WebRequestDetail> webRequest = ServletLogContext.getWebRequest();
+		WebRequestDetail webRequest = ServletLogContext.getWebRequest();
 		
-		if (webRequest.isPresent()) {
-			builder.webRequestDetail(webRequest.get());
+		if (webRequest != null) {
+			builder.webRequestDetail(webRequest);
 		}
 		
 		builder.serverVariables(Maps.fromProperties(System.getProperties()));
@@ -131,7 +130,7 @@ public class ILoggingEventAdapter implements EventAdapter<ILoggingEvent> {
 	 * @see com.stackify.api.common.log.EventAdapter#getLogMsg(java.lang.Object, com.google.common.base.Optional)
 	 */
 	@Override
-	public LogMsg getLogMsg(final ILoggingEvent event, final Optional<StackifyError> error) {
+	public LogMsg getLogMsg(final ILoggingEvent event, final StackifyError error) {
 		
 		LogMsg.Builder builder = LogMsg.newBuilder();
 		
@@ -149,15 +148,15 @@ public class ILoggingEventAdapter implements EventAdapter<ILoggingEvent> {
 			}
 		}
 				
-		builder.ex(error.orNull());
+		builder.ex(error);
 		builder.th(event.getThreadName());
 		builder.epochMs(event.getTimeStamp());
 		builder.level(event.getLevel().toString().toLowerCase());
 
-		Optional<String> transactionId = ServletLogContext.getTransactionId();
+		String transactionId = ServletLogContext.getTransactionId();
 		
-		if (transactionId.isPresent()) {
-			builder.transId(transactionId.get());
+		if (transactionId != null) {
+			builder.transId(transactionId);
 		}
 
 		StackTraceElement[] callerData = event.getCallerData();

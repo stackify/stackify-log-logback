@@ -15,6 +15,7 @@
  */
 package com.stackify.log.logback;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -26,8 +27,6 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.ThrowableProxy;
 
-import com.google.common.base.Optional;
-import com.google.common.collect.Maps;
 import com.stackify.api.EnvironmentDetail;
 import com.stackify.api.LogMsg;
 import com.stackify.api.StackifyError;
@@ -48,9 +47,9 @@ public class ILoggingEventAdapterTest {
 		ILoggingEvent event = Mockito.mock(ILoggingEvent.class);
 		
 		ILoggingEventAdapter adapter = new ILoggingEventAdapter(Mockito.mock(EnvironmentDetail.class));
-		Optional<Throwable> throwable = adapter.getThrowable(event);
+		Throwable throwable = adapter.getThrowable(event);
 		
-		Assert.assertFalse(throwable.isPresent());
+		Assert.assertNull(throwable);
 	}
 	
 	/**
@@ -65,9 +64,9 @@ public class ILoggingEventAdapterTest {
 		Mockito.when(event.getThrowableProxy()).thenReturn(proxy);
 		
 		ILoggingEventAdapter adapter = new ILoggingEventAdapter(Mockito.mock(EnvironmentDetail.class));
-		Optional<Throwable> throwable = adapter.getThrowable(event);
+		Throwable throwable = adapter.getThrowable(event);
 		
-		Assert.assertTrue(throwable.isPresent());
+		Assert.assertNotNull(throwable);
 	}
 	
 	/**
@@ -83,7 +82,7 @@ public class ILoggingEventAdapterTest {
 		String srcMethod = "srcMethod";
 		Integer srcLine = Integer.valueOf(14);
 		
-		Map<String, String> properties = Maps.newHashMap();
+		Map<String, String> properties = new HashMap<String, String>();
 		properties.put("key", "value");
 
 		StackTraceElement ste = new StackTraceElement(srcClass, srcMethod, "", srcLine);
@@ -96,7 +95,7 @@ public class ILoggingEventAdapterTest {
 		Mockito.when(event.getMDCPropertyMap()).thenReturn(properties);
 
 		ILoggingEventAdapter adapter = new ILoggingEventAdapter(Mockito.mock(EnvironmentDetail.class));
-		LogMsg logMsg = adapter.getLogMsg(event, Optional.of(ex));
+		LogMsg logMsg = adapter.getLogMsg(event, ex);
 		
 		Assert.assertNotNull(logMsg);
 		Assert.assertEquals(msg, logMsg.getMsg());
@@ -161,7 +160,7 @@ public class ILoggingEventAdapterTest {
 		Mockito.when(event.getLevel()).thenReturn(Level.DEBUG);
 
 		ILoggingEventAdapter adapter = new ILoggingEventAdapter(Mockito.mock(EnvironmentDetail.class));
-		LogMsg logMsg = adapter.getLogMsg(event, Optional.<StackifyError>absent());
+		LogMsg logMsg = adapter.getLogMsg(event, null);
 		
 		Assert.assertNotNull(logMsg);
 		Assert.assertEquals(transactionId, logMsg.getTransId());
