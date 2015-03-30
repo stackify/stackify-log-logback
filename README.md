@@ -14,6 +14,17 @@ Sign Up for a Trial:
 
 http://www.stackify.com/sign-up/
 
+## Installation
+
+Add it as a maven dependency:
+```xml
+<dependency>
+    <groupId>com.stackify</groupId>
+    <artifactId>stackify-log-logback</artifactId>
+    <version>INSERT_LATEST_MAVEN_CENTRAL_VERSION</version>
+</dependency>
+```
+
 ## Usage
 
 Example appender configuration:
@@ -31,17 +42,6 @@ Be sure to shutdown Logback to flush this appender of any errors and shutdown th
 ```java
 LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
 loggerContext.stop();
-```
-
-## Installation
-
-Add it as a maven dependency:
-```xml
-<dependency>
-    <groupId>com.stackify</groupId>
-    <artifactId>stackify-log-logback</artifactId>
-    <version>1.1.1</version>
-</dependency>
 ```
 
 ## License
