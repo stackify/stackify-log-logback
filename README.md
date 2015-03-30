@@ -1,5 +1,6 @@
 # stackify-log-logback
 
+[![Maven Central](https://img.shields.io/maven-central/v/com.stackify/stackify-log-logback.svg)](http://mvnrepository.com/artifact/com.stackify/stackify-log-logback)
 [![Build Status](https://travis-ci.org/stackify/stackify-log-logback.png)](https://travis-ci.org/stackify/stackify-log-logback)
 [![Coverage Status](https://coveralls.io/repos/stackify/stackify-log-logback/badge.png?branch=master)](https://coveralls.io/r/stackify/stackify-log-logback?branch=master)
 
