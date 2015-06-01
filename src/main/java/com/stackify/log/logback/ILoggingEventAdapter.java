@@ -182,6 +182,6 @@ public class ILoggingEventAdapter implements EventAdapter<ILoggingEvent> {
 	 */
 	@Override
 	public boolean isErrorLevel(final ILoggingEvent event) {
-		return (event.getLevel() == Level.ERROR);
+		return event.getLevel().isGreaterOrEqual(Level.ERROR);
 	}
 }
