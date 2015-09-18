@@ -41,7 +41,7 @@ Note: *If you are logging from a device that has the stackify-agent installed, t
 
 Be sure to shutdown Logback to flush this appender of any errors and shutdown the background thread:
 ```java
-LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+ch.qos.logback.classic.LoggerContext loggerContext = (ch.qos.logback.classic.LoggerContext) org.slf4j.LoggerFactory.getILoggerFactory();
 loggerContext.stop();
 ```
 
