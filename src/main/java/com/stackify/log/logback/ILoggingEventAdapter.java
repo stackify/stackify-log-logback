@@ -96,7 +96,7 @@ public class ILoggingEventAdapter implements EventAdapter<ILoggingEvent> {
 			
 			StackTraceElement[] callerData = event.getCallerData();
 			
-			if (callerData != null) {
+			if ((callerData != null) && (0 < callerData.length)) {
 				StackTraceElement locInfo = callerData[0];
 				
 				if (locInfo != null) {	
@@ -161,7 +161,7 @@ public class ILoggingEventAdapter implements EventAdapter<ILoggingEvent> {
 
 		StackTraceElement[] callerData = event.getCallerData();
 		
-		if (callerData != null) {
+		if ((callerData != null) && (0 < callerData.length)) {
 			StackTraceElement locInfo = callerData[0];
 			
 			if (locInfo != null) {			
@@ -183,5 +183,23 @@ public class ILoggingEventAdapter implements EventAdapter<ILoggingEvent> {
 	@Override
 	public boolean isErrorLevel(final ILoggingEvent event) {
 		return event.getLevel().isGreaterOrEqual(Level.ERROR);
+	}
+
+	/**
+	 * @see com.stackify.api.common.log.EventAdapter#getClassName(java.lang.Object)
+	 */
+	@Override
+	public String getClassName(final ILoggingEvent event) {
+		StackTraceElement[] callerData = event.getCallerData();
+		
+		if ((callerData != null) && (0 < callerData.length)) {
+			StackTraceElement locInfo = callerData[0];
+			
+			if (locInfo != null) {			
+				return locInfo.getClassName();
+			}
+		}
+		
+		return null;
 	}
 }

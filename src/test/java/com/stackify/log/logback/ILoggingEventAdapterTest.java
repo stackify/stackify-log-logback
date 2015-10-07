@@ -201,4 +201,22 @@ public class ILoggingEventAdapterTest {
 		Assert.assertNotNull(error);
 		Assert.assertEquals("StringException", error.getError().getErrorType());
 	}
+	
+	/**
+	 * testGetClassName
+	 */
+	@Test
+	public void testGetClassName() {
+		StackTraceElement ste = new StackTraceElement("class", "method", "file", 123);
+		
+		ILoggingEvent event = Mockito.mock(ILoggingEvent.class);
+		Mockito.when(event.getCallerData()).thenReturn(new StackTraceElement[]{ste});
+		
+		ILoggingEventAdapter adapter = new ILoggingEventAdapter(Mockito.mock(EnvironmentDetail.class));
+
+		String className = adapter.getClassName(event);
+		
+		Assert.assertNotNull(className);
+		Assert.assertEquals("class", className);
+	}
 }
