@@ -93,6 +93,13 @@ public class StackifyLogAppender extends AppenderBase<ILoggingEvent> {
 	private String maskCustom;
 
 	/**
+	 * Allow logging from com.stackify.* (Appender configuration parameter)
+	 */
+	@Setter
+	@Getter
+	private String allowComDotStackify = null;
+
+	/**
 	 * Generic log appender
 	 */
 	private LogAppender<ILoggingEvent> logAppender;
@@ -162,7 +169,7 @@ public class StackifyLogAppender extends AppenderBase<ILoggingEvent> {
 		
 		// build the api config
 		
-		ApiConfiguration apiConfig = ApiConfigurations.fromPropertiesWithOverrides(apiUrl, apiKey, application, environment);
+		ApiConfiguration apiConfig = ApiConfigurations.fromPropertiesWithOverrides(apiUrl, apiKey, application, environment, allowComDotStackify);
 
 		// get the client project name with version
 
