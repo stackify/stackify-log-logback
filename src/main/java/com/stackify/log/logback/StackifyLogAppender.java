@@ -22,6 +22,9 @@ import com.stackify.api.common.ApiClients;
 import com.stackify.api.common.ApiConfiguration;
 import com.stackify.api.common.ApiConfigurations;
 import com.stackify.api.common.log.LogAppender;
+import com.stackify.api.common.mask.Masker;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Logback logger appender for sending logs to Stackify.
@@ -68,7 +71,27 @@ public class StackifyLogAppender extends AppenderBase<ILoggingEvent> {
 	 * Environment (Appender configuration parameter)
 	 */
 	private String environment = null;
-		
+
+	@Setter
+	@Getter
+	private String maskEnabled;
+
+	@Setter
+	@Getter
+	private String maskCreditCard;
+
+	@Setter
+	@Getter
+	private String maskSSN;
+
+	@Setter
+	@Getter
+	private String maskIP;
+
+	@Setter
+	@Getter
+	private String maskCustom;
+
 	/**
 	 * Generic log appender
 	 */
@@ -148,7 +171,41 @@ public class StackifyLogAppender extends AppenderBase<ILoggingEvent> {
 		// build the log appender
 		
 		try {
-			this.logAppender = new LogAppender<ILoggingEvent>(clientName, new ILoggingEventAdapter(apiConfig.getEnvDetail()));
+
+			// setup masker
+
+			if (maskEnabled == null) {
+				maskEnabled = Boolean.TRUE.toString();
+			}
+
+			Masker masker = new Masker();
+			if (Boolean.parseBoolean(maskEnabled)) {
+
+				// set default masks
+				masker.addMask(Masker.MASK_CREDITCARD);
+				masker.addMask(Masker.MASK_SSN);
+
+				if (maskCreditCard != null && !Boolean.parseBoolean(maskCreditCard)) {
+					masker.removeMask(Masker.MASK_CREDITCARD);
+				}
+
+				if (maskSSN != null && !Boolean.parseBoolean(maskSSN)) {
+					masker.removeMask(Masker.MASK_SSN);
+				}
+
+				if (maskIP != null && Boolean.parseBoolean(maskIP)) {
+					masker.addMask(Masker.MASK_IP);
+				}
+
+				if (maskCustom != null) {
+					masker.addMask(maskCustom);
+				}
+
+			} else {
+				masker.clearMasks();
+			}
+
+			this.logAppender = new LogAppender<ILoggingEvent>(clientName, new ILoggingEventAdapter(apiConfig.getEnvDetail()), masker);
 			this.logAppender.activate(apiConfig);
 		} catch (Exception e) {
 			addError("Exception starting the Stackify_LogBackgroundService", e);

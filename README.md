@@ -45,6 +45,36 @@ ch.qos.logback.classic.LoggerContext loggerContext = (ch.qos.logback.classic.Log
 loggerContext.stop();
 ```
 
+## Masking 
+
+The Stackify appender has built-in data masking for credit cards and social security number values.
+
+**Disable Masking:**
+
+Add `<maskEnabled>true</maskEnabled>` inside the `<appender> ... </appender>` tag.
+
+**Customize Masking:**
+
+The example below has the following customizations: 
+
+1. Credit Card value masking is disabled (`<maskCreditCard>false</maskCreditCard>`)
+2. IP Address masking is enabled (`<maskIP>true</maskIP>`).
+3. Custom masking to remove vowels using a regex (`<maskCustom>[aeiou]</maskCustom>`)
+
+```xml
+<appender name="STACKIFY" class="com.stackify.log.logback.StackifyLogAppender">
+    <apiKey>YOUR_API_KEY</apiKey>
+    <application>YOUR_APPLICATION_NAME</application>
+    <environment>YOUR_ENVIRONMENT</environment>
+      
+    <maskEnabled>true</maskEnabled>
+    <maskCreditCard>false</maskCreditCard>
+    <maskSSN>true</maskSSN>
+    <maskIP>true</maskIP>
+    <maskCustom>[aeiou]</maskCustom> 
+</appender>
+```
+
 ## License
 
 Copyright 2014 Stackify, LLC.
