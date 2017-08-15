@@ -17,7 +17,6 @@ package com.stackify.log.logback;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.AppenderBase;
-
 import com.stackify.api.common.ApiClients;
 import com.stackify.api.common.ApiConfiguration;
 import com.stackify.api.common.ApiConfigurations;
@@ -50,12 +49,19 @@ import lombok.Setter;
  *
  * @author Eric Martin
  */
+@Setter
+@Getter
 public class StackifyLogAppender extends AppenderBase<ILoggingEvent> {
 		
 	/**
 	 * API URL (Appender configuration parameter)
 	 */
 	private String apiUrl = "https://api.stackify.com";
+
+	/**
+	 * Auth API URL
+	 */
+	private String authUrl = "https://auth.stackify.net";
 	
 	/**
 	 * API Key (Appender configuration parameter)
@@ -72,86 +78,20 @@ public class StackifyLogAppender extends AppenderBase<ILoggingEvent> {
 	 */
 	private String environment = null;
 
-	@Setter
-	@Getter
 	private String maskEnabled;
 
-	@Setter
-	@Getter
 	private String maskCreditCard;
 
-	@Setter
-	@Getter
 	private String maskSSN;
 
-	@Setter
-	@Getter
 	private String maskIP;
 
-	@Setter
-	@Getter
 	private String maskCustom;
 
 	/**
 	 * Generic log appender
 	 */
 	private LogAppender<ILoggingEvent> logAppender;
-
-	/**
-	 * @return the apiUrl
-	 */
-	public String getApiUrl() {
-		return apiUrl;
-	}
-
-	/**
-	 * @param apiUrl the apiUrl to set
-	 */
-	public void setApiUrl(String apiUrl) {
-		this.apiUrl = apiUrl;
-	}
-
-	/**
-	 * @return the apiKey
-	 */
-	public String getApiKey() {
-		return apiKey;
-	}
-
-	/**
-	 * @param apiKey the apiKey to set
-	 */
-	public void setApiKey(String apiKey) {
-		this.apiKey = apiKey;
-	}
-
-	/**
-	 * @return the application
-	 */
-	public String getApplication() {
-		return application;
-	}
-
-	/**
-	 * @param application the application to set
-	 */
-	public void setApplication(String application) {
-		this.application = application;
-	}
-
-	/**
-	 * @return the environment
-	 */
-	public String getEnvironment() {
-		return environment;
-	}
-
-	/**
-	 * @param environment the environment to set
-	 */
-	public void setEnvironment(String environment) {
-		this.environment = environment;
-	}
 
 	/**
 	 * @see ch.qos.logback.core.AppenderBase#start()
@@ -162,7 +102,7 @@ public class StackifyLogAppender extends AppenderBase<ILoggingEvent> {
 		
 		// build the api config
 		
-		ApiConfiguration apiConfig = ApiConfigurations.fromPropertiesWithOverrides(apiUrl, apiKey, application, environment);
+		ApiConfiguration apiConfig = ApiConfigurations.fromPropertiesWithOverrides(apiUrl, authUrl, apiKey, application, environment);
 
 		// get the client project name with version
 
