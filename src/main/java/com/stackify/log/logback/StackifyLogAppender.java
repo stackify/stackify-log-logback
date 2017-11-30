@@ -74,6 +74,10 @@ public class StackifyLogAppender extends AppenderBase<ILoggingEvent> {
 
 	@Setter
 	@Getter
+	private String skipJson = "false";
+
+	@Setter
+	@Getter
 	private String maskEnabled;
 
 	@Setter
@@ -201,7 +205,11 @@ public class StackifyLogAppender extends AppenderBase<ILoggingEvent> {
 				masker.clearMasks();
 			}
 
-			this.logAppender = new LogAppender<ILoggingEvent>(clientName, new ILoggingEventAdapter(apiConfig.getEnvDetail()), masker);
+			this.logAppender = new LogAppender<ILoggingEvent>(
+					clientName,
+					new ILoggingEventAdapter(apiConfig.getEnvDetail()),
+					masker,
+					skipJson != null && Boolean.parseBoolean(skipJson));
 			this.logAppender.activate(apiConfig);
 		} catch (Exception e) {
 			addError("Exception starting the Stackify_LogBackgroundService", e);

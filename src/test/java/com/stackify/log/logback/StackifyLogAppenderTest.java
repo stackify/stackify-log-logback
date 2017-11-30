@@ -37,6 +37,18 @@ import com.stackify.api.common.log.LogAppender;
 public class StackifyLogAppenderTest {
 
 	/**
+	 * testGetSetSkipJson
+	 */
+	@Test
+	public void testGetSetSkipJson() {
+		String skipJson = "true";
+		StackifyLogAppender appender = new StackifyLogAppender();
+		Assert.assertEquals("false", appender.getSkipJson());
+		appender.setSkipJson(skipJson);
+		Assert.assertEquals(skipJson, appender.getSkipJson());
+	}
+
+	/**
 	 * testGetSetApiUrl
 	 */
 	@Test
