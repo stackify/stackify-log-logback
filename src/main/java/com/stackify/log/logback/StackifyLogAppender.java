@@ -28,7 +28,7 @@ import lombok.Setter;
 
 /**
  * Logback logger appender for sending logs to Stackify.
- * 
+ *
  * <p>
  * Example appender configuration:
  * <pre>
@@ -40,7 +40,7 @@ import lombok.Setter;
  * </appender>
  * }
  * </pre>
- * 
+ *
  * <p>
  * Be sure to shutdown Logback to flush this appender of any errors and shutdown the background thread:
  * <pre>
@@ -51,22 +51,22 @@ import lombok.Setter;
  * @author Eric Martin
  */
 public class StackifyLogAppender extends AppenderBase<ILoggingEvent> {
-		
+
 	/**
 	 * API URL (Appender configuration parameter)
 	 */
 	private String apiUrl = "https://api.stackify.com";
-	
+
 	/**
 	 * API Key (Appender configuration parameter)
 	 */
 	private String apiKey = null;
-	
+
 	/**
 	 * Application name (Appender configuration parameter)
 	 */
 	private String application = null;
-	
+
 	/**
 	 * Environment (Appender configuration parameter)
 	 */
@@ -170,9 +170,9 @@ public class StackifyLogAppender extends AppenderBase<ILoggingEvent> {
 	@Override
 	public void start() {
 		super.start();
-		
+
 		// build the api config
-		
+
 		ApiConfiguration apiConfig = ApiConfigurations.fromPropertiesWithOverrides(apiUrl, apiKey, application, environment, allowComDotStackify);
 
 		// get the client project name with version
@@ -180,13 +180,13 @@ public class StackifyLogAppender extends AppenderBase<ILoggingEvent> {
 		String clientName = ApiClients.getApiClient(StackifyLogAppender.class, "/stackify-log-logback.properties", "stackify-log-logback");
 
 		// build the log appender
-		
+
 		try {
 
 			// setup masker
 
 			Masker masker = new Masker();
-			if (maskEnabled != null && Boolean.parseBoolean(maskEnabled)) {
+			if (Boolean.parseBoolean(maskEnabled)) {
 
 				// set default masks
 				masker.addMask(Masker.MASK_CREDITCARD);
@@ -200,7 +200,7 @@ public class StackifyLogAppender extends AppenderBase<ILoggingEvent> {
 					masker.removeMask(Masker.MASK_SSN);
 				}
 
-				if (maskIP != null && Boolean.parseBoolean(maskIP)) {
+				if (Boolean.parseBoolean(maskIP)) {
 					masker.addMask(Masker.MASK_IP);
 				}
 
@@ -216,7 +216,7 @@ public class StackifyLogAppender extends AppenderBase<ILoggingEvent> {
 					clientName,
 					new ILoggingEventAdapter(apiConfig.getEnvDetail()),
 					masker,
-					skipJson != null && Boolean.parseBoolean(skipJson));
+					Boolean.parseBoolean(skipJson));
 			this.logAppender.activate(apiConfig);
 		} catch (Exception e) {
 			addError("Exception starting the Stackify_LogBackgroundService", e);
@@ -245,7 +245,7 @@ public class StackifyLogAppender extends AppenderBase<ILoggingEvent> {
 		} catch (Exception e) {
 			addError("Exception closing Stackify Log Appender", e);
 		}
-		
+
 		super.stop();
 	}
 }
