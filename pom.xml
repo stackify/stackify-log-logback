@@ -8,11 +8,6 @@
 	<name>Stackify Log Appender for Logback</name>
 	<description>Stackify Log Appender for Logback</description>
 	<url>https://github.com/stackify/stackify-log-logback</url>
-	<parent>
-		<groupId>org.sonatype.oss</groupId>
-		<artifactId>oss-parent</artifactId>
-		<version>9</version>
-	</parent>
 
 	<licenses>
     	<license>
