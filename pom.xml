@@ -9,6 +9,12 @@
 	<description>Stackify Log Appender for Logback</description>
 	<url>https://github.com/stackify/stackify-log-logback</url>
 
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>9</version>
+	</parent>
+
 	<licenses>
     	<license>
         	<name>The Apache Software License, Version 2.0</name>
@@ -41,7 +47,7 @@
     <properties>
         <java.version>1.8</java.version>
 		<stackify-api.version>4.0.0</stackify-api.version>
-		<jackson-databind.version>2.7.9.6</jackson-databind.version>
+		<jackson-databind.version>2.9.9.3</jackson-databind.version>
 		<logback-core.version>1.0.13</logback-core.version>
 		<logback-classic.version>1.0.13</logback-classic.version>
 		<lombok.version>1.16.10</lombok.version>
@@ -170,6 +176,24 @@
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.9.1</version>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+						<configuration>
+							<failOnError>false</failOnError>
+							<additionalparam>-Xdoclint:none</additionalparam>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
 				<executions>
 					<execution>
@@ -229,6 +253,23 @@
 
 	</build>
 
+	<reporting>
+
+		<plugins>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.9.1</version>
+				<configuration>
+					<failOnError>false</failOnError>
+					<additionalparam>-Xdoclint:none</additionalparam>
+				</configuration>
+			</plugin>
+
+		</plugins>
+
+	</reporting>
 
 	<profiles>
 		<profile>
