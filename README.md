@@ -1,18 +1,12 @@
-# stackify-log-logback
-
 [![Maven Central](https://img.shields.io/maven-central/v/com.stackify/stackify-log-logback.svg)](http://mvnrepository.com/artifact/com.stackify/stackify-log-logback)
-[![Build Status](https://travis-ci.org/stackify/stackify-log-logback.png)](https://travis-ci.org/stackify/stackify-log-logback)
 [![Coverage Status](https://coveralls.io/repos/stackify/stackify-log-logback/badge.png?branch=master)](https://coveralls.io/r/stackify/stackify-log-logback?branch=master)
+
+# Stackify Logback Logger
 
 Logback logger appender for sending log messages and exceptions to Stackify.
 
-Errors and Logs Overview:
-
-http://support.stackify.com/errors-and-logs-overview/
-
-Sign Up for a Trial:
-
-http://www.stackify.com/sign-up/
+* **Errors and Logs Overview:** http://support.stackify.com/errors-and-logs-overview/
+* **Sign Up for a Trial:** http://www.stackify.com/sign-up/
 
 ## Installation
 
@@ -21,7 +15,7 @@ Add it as a maven dependency:
 <dependency>
     <groupId>com.stackify</groupId>
     <artifactId>stackify-log-logback</artifactId>
-    <version>INSERT_LATEST_MAVEN_CENTRAL_VERSION</version>
+    <version>4.0.0</version>
     <scope>runtime</scope>
 </dependency>
 ```
@@ -77,7 +71,7 @@ The example below has the following customizations:
 
 ## License
 
-Copyright 2014 Stackify, LLC.
+Copyright 2019 Stackify, LLC.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

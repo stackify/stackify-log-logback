@@ -28,6 +28,7 @@ import com.stackify.api.common.lang.Throwables;
 import com.stackify.api.common.log.APMLogData;
 import com.stackify.api.common.log.EventAdapter;
 import com.stackify.api.common.log.ServletLogContext;
+import com.stackify.api.common.log.StackTraceUtil;
 import com.stackify.api.common.util.Maps;
 import com.stackify.api.common.util.Preconditions;
 
@@ -36,170 +37,139 @@ import java.util.Map;
 
 /**
  * ILoggingEventAdapter
+ *
  * @author Eric Martin
  */
 public class ILoggingEventAdapter implements EventAdapter<ILoggingEvent> {
 
-	/**
-	 * Environment detail
-	 */
-	private final EnvironmentDetail envDetail;
-	
-	/**
-	 * JSON converter
-	 */
-	private final ObjectMapper json = new ObjectMapper();
+    /**
+     * Environment detail
+     */
+    private final EnvironmentDetail envDetail;
 
-	/**
-	 * Constructor
-	 * @param envDetail Environment detail
-	 */
-	public ILoggingEventAdapter(final EnvironmentDetail envDetail) {
-		Preconditions.checkNotNull(envDetail);
-		this.envDetail = envDetail;
-	}
+    /**
+     * JSON converter
+     */
+    private final ObjectMapper json = new ObjectMapper();
 
-	/**
-	 * @see com.stackify.api.common.log.EventAdapter#getThrowable(java.lang.Object)
-	 */
-	@Override
-	public Throwable getThrowable(final ILoggingEvent event) {
-		
-		IThrowableProxy iThrowableProxy = event.getThrowableProxy();
-		
-		if (iThrowableProxy != null) {
-			if (iThrowableProxy instanceof ThrowableProxy) {
-				ThrowableProxy throwableProxy = (ThrowableProxy) iThrowableProxy;
-				return throwableProxy.getThrowable();
-			}
-		}
-		
-		return null;
-	}
+    public ILoggingEventAdapter(final EnvironmentDetail environmentDetail) {
+        Preconditions.checkNotNull(environmentDetail);
+        this.envDetail = environmentDetail;
+    }
 
-	/**
-	 * @see com.stackify.api.common.log.EventAdapter#getStackifyError(java.lang.Object, java.lang.Throwable)
-	 */
-	@Override
-	public StackifyError getStackifyError(final ILoggingEvent event, final Throwable exception) {
+    @Override
+    public Throwable getThrowable(final ILoggingEvent event) {
 
-		StackifyError.Builder builder = StackifyError.newBuilder();
-		builder.environmentDetail(envDetail);		
-		builder.occurredEpochMillis(new Date(event.getTimeStamp()));
-		
-		if (exception != null) {
-			builder.error(Throwables.toErrorItem(event.getFormattedMessage(), exception));
-		} else {
-			String className = null;
-			String methodName = null;
-			int lineNumber = 0;
-			
-			StackTraceElement[] callerData = event.getCallerData();
-			
-			if ((callerData != null) && (0 < callerData.length)) {
-				StackTraceElement locInfo = callerData[0];
-				
-				if (locInfo != null) {	
-					className = locInfo.getClassName();
-					methodName = locInfo.getMethodName();
-					lineNumber = locInfo.getLineNumber();
-				}
-			}
-						
-			builder.error(Throwables.toErrorItem(event.getFormattedMessage(), className, methodName, lineNumber));
-		}
+        IThrowableProxy iThrowableProxy = event.getThrowableProxy();
 
-		String user = APMLogData.isLinked()? APMLogData.getUser() : ServletLogContext.getUser();
+        if (iThrowableProxy != null) {
+            if (iThrowableProxy instanceof ThrowableProxy) {
+                ThrowableProxy throwableProxy = (ThrowableProxy) iThrowableProxy;
+                return throwableProxy.getThrowable();
+            }
+        }
 
-		if (user != null) {
-			builder.userName(user);
-		}
+        return null;
+    }
 
-		WebRequestDetail webRequest = APMLogData.isLinked() ? APMLogData.getWebRequest() : ServletLogContext.getWebRequest();
+    @Override
+    public StackifyError getStackifyError(final ILoggingEvent event, final Throwable exception) {
 
-		if (webRequest != null) {
-			builder.webRequestDetail(webRequest);
-		}
-		
-		builder.serverVariables(Maps.fromProperties(System.getProperties()));
+        StackifyError.Builder builder = StackifyError.newBuilder();
+        builder.environmentDetail(envDetail);
+        builder.occurredEpochMillis(new Date(event.getTimeStamp()));
 
-		return builder.build();
-	}
+        if (exception != null) {
+            builder.error(Throwables.toErrorItem(event.getFormattedMessage(), exception));
+        } else {
+            String className = null;
+            String methodName = null;
+            int lineNumber = 0;
 
-	/**
-	 * @see com.stackify.api.common.log.EventAdapter#getLogMsg(java.lang.Object, com.google.common.base.Optional)
-	 */
-	@Override
-	public LogMsg getLogMsg(final ILoggingEvent event, final StackifyError error) {
+            StackTraceElement[] callerData = event.getCallerData();
 
-		LogMsg.Builder builder = LogMsg.newBuilder();
-		
-		builder.msg(event.getFormattedMessage());
+            if ((callerData != null) && (0 < callerData.length)) {
+                StackTraceElement locInfo = callerData[0];
 
-		Map<String, String> props = event.getMDCPropertyMap();
-		
-		if (props != null) {
-			if (!props.isEmpty()) {
-				try {
-					builder.data(json.writeValueAsString(props));
-				} catch (Exception e) {
-					// do nothing
-				}
-			}
-		}
-				
-		builder.ex(error);
-		builder.th(event.getThreadName());
-		builder.epochMs(event.getTimeStamp());
-		builder.level(event.getLevel().toString().toLowerCase());
+                if (locInfo != null) {
+                    className = locInfo.getClassName();
+                    methodName = locInfo.getMethodName();
+                    lineNumber = locInfo.getLineNumber();
+                }
+            }
 
-		String transactionId = APMLogData.isLinked() ? APMLogData.getTransactionId() : ServletLogContext.getTransactionId();
+            builder.error(Throwables.toErrorItem(event.getFormattedMessage(), className, methodName, lineNumber));
+        }
 
-		if (transactionId != null) {
-			builder.transId(transactionId);
-		}
+        String user = APMLogData.isLinked() ? APMLogData.getUser() : ServletLogContext.getUser();
 
-		StackTraceElement[] callerData = event.getCallerData();
-		
-		if ((callerData != null) && (0 < callerData.length)) {
-			StackTraceElement locInfo = callerData[0];
-			
-			if (locInfo != null) {			
-				builder.srcMethod(locInfo.getClassName() + "." + locInfo.getMethodName());
-				
-				try {
-					builder.srcLine(locInfo.getLineNumber());
-				} catch (Throwable e) {
-				}
-			}
-		}
-		
-		return builder.build();
-	}
+        if (user != null) {
+            builder.userName(user);
+        }
 
-	/**
-	 * @see com.stackify.api.common.log.EventAdapter#isErrorLevel(java.lang.Object)
-	 */
-	@Override
-	public boolean isErrorLevel(final ILoggingEvent event) {
-		return event.getLevel().isGreaterOrEqual(Level.ERROR);
-	}
+        WebRequestDetail webRequest = APMLogData.isLinked() ? APMLogData.getWebRequest() : ServletLogContext.getWebRequest();
 
-	/**
-	 * @see com.stackify.api.common.log.EventAdapter#getClassName(java.lang.Object)
-	 */
-	@Override
-	public String getClassName(final ILoggingEvent event) {
-		StackTraceElement[] callerData = event.getCallerData();
-		
-		if ((callerData != null) && (0 < callerData.length)) {
-			StackTraceElement locInfo = callerData[0];
-			
-			if (locInfo != null) {			
-				return locInfo.getClassName();
-			}
-		}
-		
-		return null;
-	}
+        if (webRequest != null) {
+            builder.webRequestDetail(webRequest);
+        }
+
+        builder.serverVariables(Maps.fromProperties(System.getProperties()));
+
+        return builder.build();
+    }
+
+    @Override
+    public LogMsg getLogMsg(final ILoggingEvent event, final StackifyError error) {
+
+        LogMsg.Builder builder = LogMsg.newBuilder();
+
+        builder.msg(event.getFormattedMessage());
+
+        Map<String, String> props = event.getMDCPropertyMap();
+
+        if (props != null) {
+            if (!props.isEmpty()) {
+                try {
+                    builder.data(json.writeValueAsString(props));
+                } catch (Exception e) {
+                    // do nothing
+                }
+            }
+        }
+
+        builder.ex(error);
+        builder.th(event.getThreadName());
+        builder.epochMs(event.getTimeStamp());
+        builder.level(event.getLevel().toString().toLowerCase());
+
+        String transactionId = APMLogData.isLinked() ? APMLogData.getTransactionId() : ServletLogContext.getTransactionId();
+
+        if (transactionId != null) {
+            builder.transId(transactionId);
+        }
+
+        StackTraceElement stackTraceElement = StackTraceUtil.getStackTraceElement(event.getCallerData());
+
+        if (stackTraceElement != null) {
+            builder.srcMethod(stackTraceElement.getClassName() + "." + stackTraceElement.getMethodName());
+
+            try {
+                builder.srcLine(stackTraceElement.getLineNumber());
+            } catch (Throwable e) {
+            }
+        }
+
+        return builder.build();
+    }
+
+    @Override
+    public boolean isErrorLevel(final ILoggingEvent event) {
+        return event.getLevel().isGreaterOrEqual(Level.ERROR);
+    }
+
+    @Override
+    public String getClassName(final ILoggingEvent event) {
+        return StackTraceUtil.getClassName(event.getCallerData());
+    }
+
 }
