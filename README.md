@@ -69,6 +69,18 @@ The example below has the following customizations:
 </appender>
 ```
 
+## Legacy Support 
+
+For legacy support of **Java 1.6 and 1.7** use the following maven dependency: 
+```
+<dependency>
+    <groupId>com.stackify</groupId>
+    <artifactId>stackify-log-logback</artifactId>
+    <version>2.1.2</version>
+</dependency>
+```
+
+
 ## License
 
 Copyright 2019 Stackify, LLC.
