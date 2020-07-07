@@ -15,7 +15,7 @@ Add it as a maven dependency:
 <dependency>
     <groupId>com.stackify</groupId>
     <artifactId>stackify-log-logback</artifactId>
-    <version>4.0.0</version>
+    <version>4.0.1</version>
     <scope>runtime</scope>
 </dependency>
 ```
