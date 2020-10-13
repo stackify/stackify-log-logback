@@ -51,7 +51,7 @@
 		<logback-core.version>1.0.13</logback-core.version>
 		<logback-classic.version>1.0.13</logback-classic.version>
 		<lombok.version>1.16.10</lombok.version>
-		<junit.version>4.11</junit.version>
+		<junit.version>4.13.1</junit.version>
 		<mockito.version>1.9.5</mockito.version>
 		<powermock.version>1.5.6</powermock.version>
     </properties>
