@@ -32,7 +32,6 @@ import com.stackify.api.common.log.StackTraceUtil;
 import com.stackify.api.common.util.Maps;
 import com.stackify.api.common.util.Preconditions;
 
-import java.util.Date;
 import java.util.Map;
 
 /**
@@ -77,7 +76,7 @@ public class ILoggingEventAdapter implements EventAdapter<ILoggingEvent> {
 
         StackifyError.Builder builder = StackifyError.newBuilder();
         builder.environmentDetail(envDetail);
-        builder.occurredEpochMillis(new Date(event.getTimeStamp()));
+        builder.occurredEpochMillis(event.getTimeStamp());
 
         if (exception != null) {
             builder.error(Throwables.toErrorItem(event.getFormattedMessage(), exception));
