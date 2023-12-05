@@ -50,7 +50,7 @@
 		<jackson.version>2.12.7</jackson.version>
 		<jackson-databind.version>2.12.6.1</jackson-databind.version>
 		<logback-core.version>1.2.0</logback-core.version>
-		<logback-classic.version>1.2.0</logback-classic.version>
+		<logback-classic.version>1.2.13</logback-classic.version>
 		<lombok.version>1.16.10</lombok.version>
 		<junit.version>4.13.1</junit.version>
 		<mockito.version>2.8.9</mockito.version>
